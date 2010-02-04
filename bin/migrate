@@ -1,0 +1,14 @@
+#!/bin/sh
+
+if [ -z "$DBMIGRATE_HOME" ]; then
+    SCRIPTDIR=`dirname "$0"`
+    DBMIGRATE_HOME=`cd $SCRIPTDIR/.. && pwd -P`
+fi
+
+if [ -z "$PROJECT_DIR" ]; then
+    PROJECT_DIR=`pwd -P` 
+fi
+
+export DBMIGRATE_HOME
+export PROJECT_DIR
+groovy -cp $DBMIGRATE_HOME/scripts -Dproj.dir=$PROJDIR $DBMIGRATE_HOME/bin/migrate.groovy $*
