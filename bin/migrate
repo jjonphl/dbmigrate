@@ -11,4 +11,4 @@ fi
 
 export DBMIGRATE_HOME
 export PROJECT_DIR
-groovy -cp $DBMIGRATE_HOME/scripts -Dproj.dir=$PROJDIR $DBMIGRATE_HOME/bin/migrate.groovy $*
+groovy -cp $DBMIGRATE_HOME/scripts -Dproj.dir=$PROJECT_DIR $DBMIGRATE_HOME/bin/migrate.groovy $*

@@ -1,0 +1,27 @@
+dbmigrate
+=========
+
+dbmigrate is a tool similar to ActiveRecord::Migration for Groovy.
+
+Usage
+-----
+1. Create a dbmigrate *project*
+    $ migrate init proj1 && cd proj1
+1. Setup migrate.properties
+    $ echo <<EOF > migrate.properties
+    driver = "com.mysql.jdbc.Driver"
+    url = "jdbc:mysql://localhost/proj1db"
+    username = "USER"
+    password = "PASSWORD"
+1. Put JDBC driver jar files in lib/.
+1. Create migration scripts
+    $ migrate generate CreateUser         # 001_create_user.groovy
+    $ migrate -s generate CreateRole      # 002_create_role.{up,down}.sql
+1. Run migration
+    $ migrate run                         # up 2 versions
+    $ migrate -v 1 run                    # down 1 version
+
+Other features
+--------------
+1. Migrate data in SQL/Groovy/CSV (in data/ dir).
+2. MySQL audit log triggers (in triggers).

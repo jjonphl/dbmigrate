@@ -21,7 +21,7 @@ if (!System.getenv('PROJECT_DIR')) {
     projectDir = System.getenv('PROJECT_DIR')
 }
 
-def cli = new CliBuilder(usage: 'migrate [-pmh] init|generate|run')
+def cli = new CliBuilder(usage: 'migrate [-pmh] init|generate|run|data|triggers')
 
 cli.h(longOpt: 'help', 'usage information')
 cli.p(longOpt: 'properties', argName: 'propfile', args: 1, required: false,
@@ -148,7 +148,7 @@ private def initializeProject(args) {
 
 private def generateMigration(args) {
     if (args.size() < 1) {
-        println 'Usage: migrate generate <MigrationName>'
+        println 'Usage: migrate [-s] generate <MigrationName>'
         return;
     }
     def files = getMigrationFiles()

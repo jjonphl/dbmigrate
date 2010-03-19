@@ -10,7 +10,6 @@ class DataMigration {
 
         switch (cmd) {
             case 'load' : load(args, m); break
-            case 'loadCsv' : loadCsv(args, m); break
             case 'clear': throw new RuntimeException('what the fuck') 
         }
     }
@@ -23,13 +22,6 @@ class DataMigration {
         files.sort().each { it.execute(m.connection) }
     }
 
-    def loadCsv(args, migrate m) {
-        def files = []
-        new File('./data-migrate').eachFileMatch(DataFile.pattern) {
-            files << new DataFile(it)
-        }
-        files.sort().each { it.executeMigration(m.connection) }
-    }
     def clear(args, config) {
 
     }
@@ -93,42 +85,6 @@ private class DataFile implements Comparable {
         }
     }
 
-    def executeMigration(sql) {
-        sql.connection.autoCommit = false
-        try {
-            println "executing ${file.name}... "
-            if (type == FileType.SQL)
-                new SqlReader(file).each { sql.execute it }
-            else if (type == FileType.CSV) {
-                def csv = new CsvReader(file)
-                def headers = csv.nextLine()
-                def ret = []
-                csv.each {
-                    def values = it.collect { s ->
-                        ret << s
-                    }
-                }
-
-                def auctionDetails = []
-                def aucProcessor
-                def count = 1
-                ret.eachWithIndex() { obj, i ->
-                    auctionDetails << obj
-                    if((i+1)%14 == 0){
-                        aucProcessor = new AuctionProcessor(auctionDetails, sql)
-                        aucProcessor.process(count)
-                        count++
-                        auctionDetails = []
-                    }
-                }
-            }
-            println 'done'
-            sql.commit()
-        } catch (e) {
-            sql.rollback()
-            throw e
-        }
-    }
     int compareTo(other) {
         if (other instanceof DataFile) {
             return number <=> other.number
